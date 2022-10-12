@@ -1,32 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import { uuidv4 } from '@firebase/util';
+import React from 'react'
 import './App.css'
+import { createSpec, getSpec, updateSpec } from './firebase';
+import LookupForm from './LookupForm';
+import SpecForm from './SpecForm'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [specName, setSpecName] = React.useState('user');
+  const [existingSpec, setExistingSpec] = React.useState();
+  const [errors, setErrors] = React.useState();
+
+  const handleSave = React.useCallback(async (specName, id, values) => {
+    if (id === null) {
+      id = uuidv4();
+      await createSpec(`${specName}/${id}`, { id, ...values });
+      return;
+    }
+
+    await updateSpec(`${specName}/${id}`, values);
+  }, []);
+
+  const handleLoad = React.useCallback(async (specName, id) => {
+    const spec = await getSpec(`${specName}/${id}`);
+    if (!spec) {
+      return alert(`${specName}/${id} not found!`);
+    }
+
+    setExistingSpec(spec);
+  }, []);
 
   return (
-    <div className="App">
+    <div>
+      <h1>Beagle Data Manager</h1>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <LookupForm onLoad={handleLoad} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <hr/>
+      <div>
+        {existingSpec
+        ?
+          <SpecForm
+            specName={specName}  
+            id={existingSpec.id}
+            existingFieldValues={existingSpec}
+            onSave={handleSave}         
+          />
+        :
+          <SpecForm
+            specName={specName}
+            onSave={handleSave}
+          />
+        }
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   )
 }
