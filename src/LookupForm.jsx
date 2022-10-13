@@ -1,10 +1,7 @@
 import React from 'react';
 
 const LookupForm = (props) => {
-    // const [specName, id] = props;
     const { onLoad } = props;
-    console.log('LookupForm: ')
-    console.log(props)
 
     return (
         <form onSubmit={(e) => {

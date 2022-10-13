@@ -5,11 +5,10 @@ import { config } from './config.js';
 // const config = {
 //   // INSERT YOU FIREBASE APP CONFIG HERE
 //   // CREATE AT https://console.firebase.google.com/
-//   // Imported instead
+//   // Imported as config
 // };
 
-initializeApp(config);
-
+export const app = initializeApp(config);
 export const db = getFirestore();
 
 export const getSpec = async (path) => {
