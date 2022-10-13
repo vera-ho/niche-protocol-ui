@@ -1,21 +1,28 @@
 import React from 'react';
 
 const LookupForm = (props) => {
-    const { onLoad } = props;
+    const { onLoadOne, onLoadAll } = props;
 
     return (
-        <form onSubmit={(e) => {
+        <form onSubmit={ (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
             const specName = formData.get('spec_name');
             const id = formData.get('id');
 
-            if (!specName || !id) {
-                return alert('Select a spec and enter an id!');
+            if(!specName) {
+                return alert('Select a spec!')
             }
 
-            onLoad(specName, id);
+            // Load all documents for given spec type or specific ID
+            if(!id) {
+                onLoadAll(specName);
+            } else {
+                onLoadOne(specName, id);
+            }
+
         }}>
+
         <label>spec type:
             <select name="spec_name">
             <option>user</option>
@@ -25,6 +32,7 @@ const LookupForm = (props) => {
             <input name="id" type="text" />
         </label>
         <button type="submit">Load</button>
+        <button type="reset">Clear UUID</button>
         </form>
     );
 };

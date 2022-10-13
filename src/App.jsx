@@ -1,15 +1,16 @@
 import { uuidv4 } from '@firebase/util';
 import React from 'react'
 import './App.css'
-import { createSpec, getSpec, updateSpec } from './firebase';
+import { createSpec, getSpec, getSpecDocs, updateSpec } from './firebase';
 import LookupForm from './LookupForm';
 import SpecForm from './SpecForm'
 
 function App() {
   const [specName, setSpecName] = React.useState('user');
-  const [existingSpec, setExistingSpec] = React.useState();
+  const [existingSpec, setExistingSpec] = React.useState([]);
   const [errors, setErrors] = React.useState();
 
+  // 
   const handleSave = React.useCallback(async (specName, id, values) => {
     if (id === null) {
       id = uuidv4();
@@ -20,20 +21,37 @@ function App() {
     await updateSpec(`${specName}/${id}`, values);
   }, []);
 
-  const handleLoad = React.useCallback(async (specName, id) => {
+  // Load one document from a spec with a given UUID
+  const handleLoadOne = React.useCallback(async (specName, id) => {
     const spec = await getSpec(`${specName}/${id}`);
     if (!spec) {
       return alert(`${specName}/${id} not found!`);
     }
 
-    setExistingSpec(spec);
+    setExistingSpec([spec]);
+  }, []);
+
+  // Load all documents from a spec when no UUID is given
+  const handleLoadAll = React.useCallback(async (specName) => {
+    const specItems = await getSpecDocs(`${specName}`);
+    if (!specItems) {
+      return alert(`${specName} not found!`);
+    }
+
+    let items = [];
+    specItems.forEach(doc => items.push(doc.data()));
+
+    setExistingSpec(items);
   }, []);
 
   return (
     <div>
       <h1>Beagle Data Manager</h1>
       <div>
-        <LookupForm onLoad={handleLoad} />
+        <LookupForm 
+          onLoadOne={handleLoadOne} 
+          onLoadAll={handleLoadAll}
+        />
       </div>
       <hr/>
       <div>

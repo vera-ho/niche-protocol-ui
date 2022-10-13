@@ -1,5 +1,5 @@
 import { initializeApp } from '@firebase/app';
-import { doc, getDoc, updateDoc, getFirestore, setDoc, deleteDoc } from '@firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc, getFirestore, setDoc, deleteDoc } from '@firebase/firestore';
 import { config } from './config.js';
 
 // const config = {
@@ -15,6 +15,17 @@ export const getSpec = async (path) => {
   const docRef = doc(db, path);
   const res = await getDoc(docRef);
   return res.data();
+}
+
+export const getSpecDocs = async (path) => {
+  const collectionRef = collection(db, path);
+  const res = await getDocs(collectionRef);
+  return res;
+
+  // res.forEach((doc) => {
+  //   console.log(`${doc.id} => ${doc.data()}`);
+  //   console.log(doc.data())
+  // });
 }
 
 export const createSpec = async (path, values) => {
