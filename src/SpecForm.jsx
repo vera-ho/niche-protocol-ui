@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFormik } from 'formik'
 
 const SpecForm = (props) => {
   const [formValues, setFormValues] = React.useState({});
@@ -12,32 +13,42 @@ const SpecForm = (props) => {
     setFormValues(existingFieldValues);
   }, [existingFieldValues]);
 
-  const handleSubmit = React.useCallback(() => {
-    onSave(specName, id || null, formValues);
-  }, [specName, id, formValues, onSave]);
-
-  return (
-    <form onSubmit={(e) => {
-      e.preventDefault();
+  const formik = useFormik({   
+    initialValues: formValues,
+    enableReinitialize: true,
+    onSubmit: (e) => {     // formik.handleSubmit
       handleSubmit();
       setFormValues({});
-    }}>
-      <div>
-        <label>example field
-          <input 
-            type="text" 
-            name="example_field" 
-            value={formValues['example_field'] || ''}
-            onChange={(e) => {
-              setFormValues({
-                [e.target.name]: e.target.value, 
-                ...setFormValues,
-              });
-            }} 
-          />
-        </label>
+    },
+  });
+
+  const handleSubmit = React.useCallback(() => {
+    onSave(specName, id || null, formik.values);
+  }, [specName, id, formik.values, onSave]);
+
+  const keys = Object.keys(formik.values);
+  const fields = keys.map( (field, idx) => {
+    // let fieldType;
+    
+    return (
+      <label key={idx}>{field}
+        <input
+          type='text'
+          name={field}
+          value={formik.values[field]}
+          onChange={formik.handleChange}
+        />
+        <br></br>
+      </label>
+    )
+  });
+
+  return (
+    <form onSubmit={formik.handleSubmit}>
+      <div className='spec-form-fields'>
+        {fields}
       </div>
-      <div>
+      <div className='spec-form-submit-button'>
         <button type="submit">Save</button>
       </div>
     </form>

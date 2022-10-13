@@ -7,10 +7,11 @@ import SpecForm from './SpecForm'
 
 function App() {
   const [specName, setSpecName] = React.useState('user');
-  const [existingSpec, setExistingSpec] = React.useState([]);
+  const [existingSpec, setExistingSpec] = React.useState();
+  const [existingDocs, setExistingDocs] = React.useState([]);
   const [errors, setErrors] = React.useState();
 
-  // 
+  // Update database
   const handleSave = React.useCallback(async (specName, id, values) => {
     if (id === null) {
       id = uuidv4();
@@ -28,7 +29,8 @@ function App() {
       return alert(`${specName}/${id} not found!`);
     }
 
-    setExistingSpec([spec]);
+    setExistingSpec(spec);
+    setExistingDocs([spec]);
   }, []);
 
   // Load all documents from a spec when no UUID is given
@@ -40,8 +42,8 @@ function App() {
 
     let items = [];
     specItems.forEach(doc => items.push(doc.data()));
-
-    setExistingSpec(items);
+    setExistingDocs(items);
+    setExistingSpec(items[0]);
   }, []);
 
   return (
