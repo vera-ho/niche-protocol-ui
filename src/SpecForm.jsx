@@ -2,7 +2,7 @@ import React from 'react';
 
 const SpecForm = (props) => {
   const [formValues, setFormValues] = React.useState({});
-  const [specName, id, values] = props;
+  const { specName, id, existingFieldValues, onSave } = props;
 
   React.useEffect(() => {
     if (!existingFieldValues) {
