@@ -10,7 +10,7 @@ const SpecForm = (props) => {
 
   // Get spec schema for validation and form entries
   React.useEffect( () => {
-    getSpecSchema(specName, setSpecSchema);
+    if(!specSchema['fields']) getSpecSchema(specName, setSpecSchema);
   }, [])
 
   React.useEffect(() => {
@@ -28,7 +28,7 @@ const SpecForm = (props) => {
   const formik = useFormik({   
     initialValues: initValues,
     enableReinitialize: true,
-    validationSchema: BeagleSchema[specName],
+    // validationSchema: BeagleSchema[specName],
     onSubmit: () => {
       console.log('submit!')
       handleSubmit();     // update database
@@ -42,15 +42,28 @@ const SpecForm = (props) => {
 
   // Render each form field and its value
   const fields = Object.keys(formik.values || []).map( (field, idx) => {
-    // let fieldType;
+    let fieldType;
+    console.log('field: ' + field)
+    // if(specName in ['name', 'role', 'auth_provider']) fieldType = 'text';
+    if(field === 'email') fieldType = 'email';
+    else if(field === 'password') fieldType = 'password';
+    else if(field === 'verified_email') fieldType = 'checkbox';
+    else if(field === 'phone_number') fieldType = 'number';
+    else if(['last_login', 'created_at', 'updated_at'].includes(field)) fieldType = 'datetime-local';
+    else fieldType = 'text';
 
+    console.log('fieldType: ' + fieldType)
+
+    // formik functions values, handleChange, handleSubmit, errors, touched, handleBlur, isValid, dirty
     return (
       <label key={idx}>{field}
         <input
-          type='text'
+          type={fieldType}
           name={field}
           value={formik.values[field]}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          className={formik.errors}
         />
         <br></br>
       </label>
