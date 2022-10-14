@@ -1,28 +1,28 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { getSpecTypes, getSpecSchema } from './util/beagle_specs';
+import { getSpecSchema } from './util/beagle_specs';
 
 const SpecForm = (props) => {
   const [formValues, setFormValues] = React.useState({});
   const { specName, id, existingFieldValues, onSave } = props;
   const [specSchema, setSpecSchema] = React.useState({});
 
+  // Get spec schema for validation and form entries
   React.useEffect( () => {
     getSpecSchema(specName, setSpecSchema);
   }, [])
 
+  // If props has valid existing field values, set them into state each time they change
   React.useEffect(() => {
-    if (!existingFieldValues) {
-      return;
-    }
-
+    if (!existingFieldValues) return;
     setFormValues(existingFieldValues);
   }, [existingFieldValues]);
 
+  // Set formik up to make form updates; initialize with existing form values
   const formik = useFormik({   
     initialValues: formValues,
     enableReinitialize: true,
-    onSubmit: (e) => {     // formik.handleSubmit
+    onSubmit: () => {
       handleSubmit();
       setFormValues({});
     },
@@ -32,7 +32,8 @@ const SpecForm = (props) => {
     onSave(specName, id || null, formik.values);
   }, [specName, id, formik.values, onSave]);
 
-  const fields = Object.keys(formik.values).map( (field, idx) => {
+  // Render each form field and it's value
+  const fields = Object.keys(formik.values || []).map( (field, idx) => {
     // let fieldType;
 
     return (
@@ -51,6 +52,9 @@ const SpecForm = (props) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className='spec-form-fields'>
+        {/* <label>id: {id}
+          <br></br>
+        </label> */}
         {fields}
       </div>
       <div className='spec-form-submit-button'>

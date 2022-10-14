@@ -1,7 +1,7 @@
 import { uuidv4 } from '@firebase/util';
 import React from 'react'
 import './App.css'
-import { createSpec, getSpec, getSpecDocs, updateSpec } from './firebase';
+import { createSpec, getSpec, getSpecDocs, updateSpec } from './util/firebase';
 import LookupForm from './LookupForm';
 import SpecForm from './SpecForm'
 

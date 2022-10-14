@@ -1,6 +1,6 @@
 import { initializeApp } from '@firebase/app';
 import { collection, doc, getDoc, getDocs, updateDoc, getFirestore, setDoc, deleteDoc } from '@firebase/firestore';
-import { config } from './config.js';
+import { config } from '../config.js';
 
 // const config = {
 //   // INSERT YOU FIREBASE APP CONFIG HERE
