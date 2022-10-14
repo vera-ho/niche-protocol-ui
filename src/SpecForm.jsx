@@ -31,7 +31,6 @@ const SpecForm = (props) => {
     enableReinitialize: true,
     validationSchema: BeagleSchema[specName],
     onSubmit: () => {
-      console.log('submit!')
       handleSubmit();     // update database
       setFormValues({});  // reset form
     },
@@ -40,6 +39,10 @@ const SpecForm = (props) => {
   const handleSubmit = React.useCallback(() => {
     onSave(specName, id || null, formik.values);
   }, [specName, id, formik.values, onSave]);
+
+  const handleReset = React.useCallback(() => {
+    setFormValues({});
+  })
 
   // Render each form field and its value
   const fields = Object.keys(formik.values || []).map( (field, idx) => {
@@ -106,8 +109,8 @@ const SpecForm = (props) => {
         {fields}
       </div>
       <div className='spec-form-submit-button'>
-        <button onClick={formik.handleReset}>Reset Form</button>
         <button type="submit">Save</button>
+        <button type='button' onClick={formik.handleReset}>Reset Form</button>
       </div>
     </form>
   );
