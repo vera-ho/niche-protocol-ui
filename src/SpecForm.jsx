@@ -40,10 +40,6 @@ const SpecForm = (props) => {
     onSave(specName, id || null, formik.values);
   }, [specName, id, formik.values, onSave]);
 
-  const handleReset = React.useCallback(() => {
-    setFormValues({});
-  })
-
   // Render each form field and its value
   const fields = Object.keys(formik.values || []).map( (field, idx) => {
     let fieldType = 'text';
