@@ -4,7 +4,7 @@ import { getSpecSchema } from './util/beagle_specs';
 import { BeagleSchema } from './util/beagle_schema';
 
 const SpecForm = (props) => {
-  let { specName, id, existingFieldValues, onSave } = props;
+  const { specName, id, existingFieldValues, onSave } = props;
   const [formValues, setFormValues] = React.useState({});
   const [specSchema, setSpecSchema] = React.useState({});
 
@@ -25,10 +25,11 @@ const SpecForm = (props) => {
   });
 
   // Set formik up to make form updates; initialize with existing form values
+  // formik functions values, handleChange, handleSubmit, errors, touched, handleBlur, isValid, dirty
   const formik = useFormik({   
     initialValues: initValues,
     enableReinitialize: true,
-    // validationSchema: BeagleSchema[specName],
+    validationSchema: BeagleSchema[specName],
     onSubmit: () => {
       console.log('submit!')
       handleSubmit();     // update database
@@ -42,18 +43,20 @@ const SpecForm = (props) => {
 
   // Render each form field and its value
   const fields = Object.keys(formik.values || []).map( (field, idx) => {
-    let fieldType;
+    let fieldType = 'text';
     if(field === 'email') fieldType = 'email';
     else if(field === 'password') fieldType = 'password';
     else if(field === 'verified_email') fieldType = 'checkbox';
-    else if(field === 'phone_number') fieldType = 'number';
     else if(['last_login', 'created_at', 'updated_at'].includes(field)) fieldType = 'datetime-local';
-    else fieldType = 'text';
+    // else if(field === 'phone_number') fieldType = 'number';
     
-    // formik functions values, handleChange, handleSubmit, errors, touched, handleBlur, isValid, dirty
-    if(field === 'role' || field === 'auth_provider') {
-      const options = specSchema['fields'][field]['type'].split(' | ')
+    const error = formik.errors[field] && formik.touched[field] && 
+      (<><br/><span className='form-error'>{formik.errors[field]}</span></>)
 
+    // Select type of input element per field
+    if(field === 'role' || field === 'auth_provider') {
+      const options = specSchema['fields'][field]['type'].split(' | ');
+      
       return (
         <label key={idx}>{field}
           <select 
@@ -61,6 +64,7 @@ const SpecForm = (props) => {
             value={formik.values[field]}
             onChange={formik.handleChange}
             onBlur={formik.handleChange}
+            className={formik.errors}
           >
             {options.map((option, idxo) => {
               return (
@@ -70,6 +74,7 @@ const SpecForm = (props) => {
               )
             })}
           </select>
+          {error}
           <br></br>
         </label>
       )
@@ -82,8 +87,8 @@ const SpecForm = (props) => {
             value={formik.values[field]}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className={formik.errors}
           />
+          {error}
           <br></br>
         </label>
       )
@@ -101,6 +106,7 @@ const SpecForm = (props) => {
         {fields}
       </div>
       <div className='spec-form-submit-button'>
+        <button onClick={formik.handleReset}>Reset Form</button>
         <button type="submit">Save</button>
       </div>
     </form>
