@@ -43,31 +43,52 @@ const SpecForm = (props) => {
   // Render each form field and its value
   const fields = Object.keys(formik.values || []).map( (field, idx) => {
     let fieldType;
-    console.log('field: ' + field)
-    // if(specName in ['name', 'role', 'auth_provider']) fieldType = 'text';
     if(field === 'email') fieldType = 'email';
     else if(field === 'password') fieldType = 'password';
     else if(field === 'verified_email') fieldType = 'checkbox';
     else if(field === 'phone_number') fieldType = 'number';
     else if(['last_login', 'created_at', 'updated_at'].includes(field)) fieldType = 'datetime-local';
     else fieldType = 'text';
-
-    console.log('fieldType: ' + fieldType)
-
+    
     // formik functions values, handleChange, handleSubmit, errors, touched, handleBlur, isValid, dirty
-    return (
-      <label key={idx}>{field}
-        <input
-          type={fieldType}
-          name={field}
-          value={formik.values[field]}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          className={formik.errors}
-        />
-        <br></br>
-      </label>
-    )
+    if(field === 'role' || field === 'auth_provider') {
+      const options = specSchema['fields'][field]['type'].split(' | ')
+
+      return (
+        <label key={idx}>{field}
+          <select 
+            name={field}
+            value={formik.values[field]}
+            onChange={formik.handleChange}
+            onBlur={formik.handleChange}
+          >
+            {options.map((option, idxo) => {
+              return (
+                <option value={option} label={option} key={idxo}>
+                  {option}
+                </option>
+              )
+            })}
+          </select>
+          <br></br>
+        </label>
+      )
+    } else {
+      return (
+        <label key={idx}>{field}
+          <input
+            type={fieldType}
+            name={field}
+            value={formik.values[field]}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className={formik.errors}
+          />
+          <br></br>
+        </label>
+      )
+    }
+
   });
 
   return (
