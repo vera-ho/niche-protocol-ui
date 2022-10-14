@@ -4,8 +4,8 @@ import { getSpecSchema } from './util/beagle_specs';
 import { BeagleSchema } from './util/beagle_schema';
 
 const SpecForm = (props) => {
+  let { specName, id, existingFieldValues, onSave } = props;
   const [formValues, setFormValues] = React.useState({});
-  const { specName, id, existingFieldValues, onSave } = props;
   const [specSchema, setSpecSchema] = React.useState({});
 
   // Get spec schema for validation and form entries
@@ -91,12 +91,13 @@ const SpecForm = (props) => {
 
   });
 
+  // SpecForm 
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className='spec-form-fields'>
-        {/* <label>id: {id}
+        <label>id: {id}
           <br></br>
-        </label> */}
+        </label>
         {fields}
       </div>
       <div className='spec-form-submit-button'>

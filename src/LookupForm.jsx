@@ -1,7 +1,7 @@
 import React from 'react';
 
 const LookupForm = (props) => {
-    const { onLoadOne, onLoadAll } = props;
+    const { onLoadOne, onLoadAll, specTypes } = props;
 
     return (
         <form onSubmit={ (e) => {
@@ -25,7 +25,8 @@ const LookupForm = (props) => {
 
         <label>spec type:
             <select name="spec_name">
-            <option>user</option>
+                {specTypes.map( spec => <option>{spec}</option>)}
+            {/* <option>user</option> */}
             </select>
         </label>
         <label>Existing spec id:

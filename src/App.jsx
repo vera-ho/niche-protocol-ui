@@ -1,15 +1,22 @@
-import { uuidv4 } from '@firebase/util';
 import React from 'react'
-import './App.css'
+import { uuidv4 } from '@firebase/util';
 import { createSpec, getSpec, getSpecDocs, updateSpec } from './util/firebase';
+import { getSpecTypes } from './util/beagle_specs';
 import LookupForm from './LookupForm';
 import SpecForm from './SpecForm'
+import './App.css'
 
 function App() {
   const [specName, setSpecName] = React.useState('user');
+  const [specTypes, setSpecTypes] = React.useState([])
   const [existingSpec, setExistingSpec] = React.useState();
   const [existingDocs, setExistingDocs] = React.useState([]);
   const [errors, setErrors] = React.useState();
+
+  // Get spec types for document creation and loading
+  React.useEffect( () => {
+    getSpecTypes(setSpecTypes);
+  }, [])
 
   // Update database
   const handleSave = React.useCallback(async (specName, id, values) => {
@@ -53,6 +60,7 @@ function App() {
         <LookupForm 
           onLoadOne={handleLoadOne} 
           onLoadAll={handleLoadAll}
+          specTypes={specTypes}
         />
       </div>
       <hr/>
