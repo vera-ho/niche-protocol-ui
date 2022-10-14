@@ -1,9 +1,15 @@
 import React from 'react';
-import { useFormik } from 'formik'
+import { useFormik } from 'formik';
+import { getSpecTypes, getSpecSchema } from './util/beagle_specs';
 
 const SpecForm = (props) => {
   const [formValues, setFormValues] = React.useState({});
   const { specName, id, existingFieldValues, onSave } = props;
+  const [specSchema, setSpecSchema] = React.useState({});
+
+  React.useEffect( () => {
+    getSpecSchema(specName, setSpecSchema);
+  }, [])
 
   React.useEffect(() => {
     if (!existingFieldValues) {
@@ -26,10 +32,9 @@ const SpecForm = (props) => {
     onSave(specName, id || null, formik.values);
   }, [specName, id, formik.values, onSave]);
 
-  const keys = Object.keys(formik.values);
-  const fields = keys.map( (field, idx) => {
+  const fields = Object.keys(formik.values).map( (field, idx) => {
     // let fieldType;
-    
+
     return (
       <label key={idx}>{field}
         <input
