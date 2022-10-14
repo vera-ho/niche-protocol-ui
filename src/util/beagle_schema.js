@@ -1,12 +1,5 @@
 import * as Yup from 'yup';
 
-export const BeagleSchema = {
-    user: UserSchema,
-    customer: CustomerSchema,
-    order: OrderSchema,
-    shopping_cart: CartSchema
-}
-
 const UserSchema = Yup.object().shape({
     fields: Yup.object().shape({
         name: Yup.string()
@@ -48,3 +41,10 @@ const UserSchema = Yup.object().shape({
 const CustomerSchema = {};
 const OrderSchema = {};
 const CartSchema = {};
+
+export const BeagleSchema = {
+    user: UserSchema,
+    customer: CustomerSchema,
+    order: OrderSchema,
+    shopping_cart: CartSchema
+};

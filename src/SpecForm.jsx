@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { getSpecSchema } from './util/beagle_specs';
+import { BeagleSchema } from './util/beagle_schema';
 
 const SpecForm = (props) => {
   const [formValues, setFormValues] = React.useState({});
@@ -12,19 +13,26 @@ const SpecForm = (props) => {
     getSpecSchema(specName, setSpecSchema);
   }, [])
 
-  // If props has valid existing field values, set them into state each time they change
   React.useEffect(() => {
     if (!existingFieldValues) return;
     setFormValues(existingFieldValues);
   }, [existingFieldValues]);
 
+  // Create object with initial values to use in Formik; ignores fields from db that are not in schema
+  const initValues = {};
+  Object.keys(specSchema['fields'] || {}).forEach(field => {
+    initValues[field] = formValues[field] ? formValues[field] : specSchema['fields'][field]['initialValue'];
+  });
+
   // Set formik up to make form updates; initialize with existing form values
   const formik = useFormik({   
-    initialValues: formValues,
+    initialValues: initValues,
     enableReinitialize: true,
+    validationSchema: BeagleSchema[specName],
     onSubmit: () => {
-      handleSubmit();
-      setFormValues({});
+      console.log('submit!')
+      handleSubmit();     // update database
+      setFormValues({});  // reset form
     },
   });
 
@@ -32,7 +40,7 @@ const SpecForm = (props) => {
     onSave(specName, id || null, formik.values);
   }, [specName, id, formik.values, onSave]);
 
-  // Render each form field and it's value
+  // Render each form field and its value
   const fields = Object.keys(formik.values || []).map( (field, idx) => {
     // let fieldType;
 
