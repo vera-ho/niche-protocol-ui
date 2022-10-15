@@ -129,12 +129,14 @@ function App() {
             id={existingSpec.id}
             existingFieldValues={existingSpec}
             onLoad={handleLoadOne}
+            onSave={handleSave}
           />
         : 
           <EdgeForm 
             specSchema={specSchema}
             specName={specName}
             onLoad={handleLoadOne}
+            onSave={handleSave}
           />
         }
         

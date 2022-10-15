@@ -14,7 +14,7 @@ import { getSpecSchema } from './util/beagle_specs';
     Generate react component for each item that displays ID and name with option to delete
  */
 const EdgeForm = props => {
-    const { specSchema, specName, id, existingFieldValues, onLoad } = props;
+    const { specSchema, specName, id, existingFieldValues, onLoad, onSave } = props;
     const [edgeName, setEdgeName] = React.useState();
     const edgeTypes = specSchema['edges'];
 
@@ -24,17 +24,23 @@ const EdgeForm = props => {
         setEdgeName(e.target.value);
     })
 
-    // Add id to selected edge type
-    const handleAddEdge = React.useCallback(() => {
+    // Add new edge ID
+    const handleAddEdge = React.useCallback(e => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const edge_id = formData.get('id');
 
+        if(!edgeName) return alert('Select an edge type!');
+        if(!edge_id) return alert('Enter an ID!')
+
+        existingFieldValues[edgeName].push(edge_id);
+        onSave(specName, id, existingFieldValues);
     })
 
     // Remove selected edge
     const handleDeleteEdge = React.useCallback(() => {
 
     })
-
-
 
     return (
         <div>
@@ -49,17 +55,15 @@ const EdgeForm = props => {
                 </select>
             </label>
 
-            {/* Add new ID to an edge type */}
-            <form onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const id = formData.get('id');
-
-                if(!edgeName) return alert('Select an edge type!');
-                
-            }}>
-
+            <form onSubmit={handleAddEdge}>
+                <label>add id to edge: 
+                    <input name='id' type='text'/>
+                </label>
+                <button type='submit'>Add ID</button>
+                <button type='reset'>Clear UUID</button>
             </form>
+
+            
             
         </div>
     )
