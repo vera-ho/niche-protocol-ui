@@ -14,8 +14,9 @@ const UserSchema = Yup.object().shape({
         'Invalid phone number'),
     last_login: Yup.date()
         .required('Last login date is required')
+        .min(Yup.ref('created_at'), 'Login date cannot be before create date')
+        .max(new Date(), 'Login date cannot be after today')
         .nullable(),
-        // need to check last login date is after creation date and before current date?
     role: Yup.string()
         .required('Role is required'),
     auth_provider: Yup.string()
@@ -23,12 +24,13 @@ const UserSchema = Yup.object().shape({
         .nullable(),
     created_at: Yup.date()
         .required('Creation date required')
+        .max(new Date(), 'Create date cannot be after today')
         .nullable(),
-        // need to check creation date is not after current date?
     updated_at: Yup.date()
         .required('Update date required')
+        .min(Yup.ref('created_at'), 'Update date cannot be before create date')
+        .max(new Date(), 'Update date cannot be after today')
         .nullable()
-        // need to check update date is after creation date and before current date?
 })
 
 const UserEdgeSchema = Yup.object().shape({
@@ -51,24 +53,26 @@ const CustomerSchema = Yup.object().shape({
         .nullable(),
     created_at: Yup.date()
         .required('Creation date required')
+        .max(new Date(), 'Create date cannot be after today')
         .nullable(),
-        // need to check creation date is not after current date?
     updated_at: Yup.date()
         .required('Update date required')
+        .min(Yup.ref('created_at'), 'Update date cannot be before create date')
+        .max(new Date(), 'Update date cannot be after today')
         .nullable()
-        // need to check update date is after creation date and before current date?
 });
 
 const CartSchema = Yup.object().shape({
     products: Yup.array().of(Yup.object()),
     created_at: Yup.date()
         .required('Creation date required')
+        .max(new Date(), 'Create date cannot be after today')
         .nullable(),
-        // need to check creation date is not after current date?
     updated_at: Yup.date()
         .required('Update date required')
+        .min(Yup.ref('created_at'), 'Update date cannot be before create date')
+        .max(new Date(), 'Update date cannot be after today')
         .nullable()
-        // need to check update date is after creation date and before current date?
 });
 
 const OrderSchema = Yup.object().shape({
@@ -78,12 +82,13 @@ const OrderSchema = Yup.object().shape({
     shipping_cost: Yup.number(),
     created_at: Yup.date()
         .required('Creation date required')
+        .max(new Date(), 'Create date cannot be after today')
         .nullable(),
-        // need to check creation date is not after current date?
     updated_at: Yup.date()
         .required('Update date required')
+        .min(Yup.ref('created_at'), 'Update date cannot be before create date')
+        .max(new Date(), 'Update date cannot be after today')
         .nullable()
-        // need to check update date is after creation date and before current date?
 });
 
 // TBD
