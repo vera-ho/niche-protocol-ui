@@ -18,7 +18,7 @@ const EdgeForm = props => {
     const { specSchema, specName, id, existingFieldValues, onLoad, onSave } = props;
     const [edgeName, setEdgeName] = React.useState();
     const edgeTypes = specSchema['edges'];
-    const edges = existingFieldValues ? existingFieldValues[edgeName] : [];
+    const edges = existingFieldValues ? existingFieldValues[edgeName] : ['',''];
 
     // Choose edge type
     const handleEdgeSelect = React.useCallback((e) => {
@@ -51,9 +51,7 @@ const EdgeForm = props => {
                 <select name='edge_type' onChange={handleEdgeSelect} value={edgeName}>
                     <option value='Select an edge type'>Select an edge type</option>
                     {Object.keys(edgeTypes || {}).map( (edge, idx) => {
-                        return (
-                            <option key={idx} value={edge}>{edge}</option>
-                        )
+                        return ( <option key={idx} value={edge}>{edge}</option> )
                     })}
                 </select>
             </label>
@@ -74,8 +72,17 @@ const EdgeForm = props => {
     )
 }
 
+// Component for each edge associated with edge type
 const EdgeItem = props => {
     const { specName, id } = props;
+    const [edgeSpec, setEdgeSpec] = React.useState();
+    
+    // Retrieve spec associated with edge
+    const handleLoadEdgeSpec = React.useCallback(async (specName, id) => {
+        const spec = await getSpec(`${specName}/${id}`);
+        if(!spec) return alert((`${specName}/${id} not found!`));
+        setEdgeSpec(spec);
+    })
 
     // Remove selected edge
     const handleDeleteEdge = React.useCallback(async () => {
@@ -83,16 +90,15 @@ const EdgeItem = props => {
         if(confirm(msg)) await deleteSpec(`${specName}/${id}`);
     })
 
-    const name = '';
+    handleLoadEdgeSpec(specName, id);
+    const name = edgeSpec ? edgeSpec['name'] : 'No name available';
 
     return (
         <div>
             <div>
-                <span>{id}</span>
+                <span>{id || 'No ID available'}{' - '}</span>
                 <span>{name}</span>
-            </div>
-            <div>
-                <button type='button' onClick={handleDeleteEdge}>🗑</button>
+                <span><button type='button' onClick={handleDeleteEdge}>🗑</button></span>
             </div>
         </div>
     )
