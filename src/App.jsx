@@ -13,14 +13,14 @@ function App() {
   const [specSchema, setSpecSchema] = React.useState({});
   const [existingSpec, setExistingSpec] = React.useState();
   const [existingDocs, setExistingDocs] = React.useState([]);
-  const [errors, setErrors] = React.useState();
+  // const [errors, setErrors] = React.useState();  // done by Yup
 
   // Get spec types for document creation and loading and spec schema for validation/form entries
   // Try this later: https://github.com/reactjs/rfcs/pull/229
   React.useEffect( () => {
-    if(!specTypes.length) getSpecTypes(setSpecTypes);
-    if(!specSchema['fields']) getSpecSchema(specName, setSpecSchema);
-  }, [])
+    getSpecTypes(setSpecTypes);
+    getSpecSchema(specName, setSpecSchema);
+  }, [specName])
 
   // Update database
   const handleSave = React.useCallback(async (specName, id, values) => {
@@ -33,7 +33,7 @@ function App() {
     await updateSpec(`${specName}/${id}`, values);
   }, []);
 
-  // Load one document from a spec with a given UUID
+  // Load one document from a spec with a given UUID`
   const handleLoadOne = React.useCallback(async (specName, id) => {
     const spec = await getSpec(`${specName}/${id}`);
     if (!spec) {

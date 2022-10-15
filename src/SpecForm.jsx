@@ -7,17 +7,11 @@ import { BeagleSpecSchema } from './util/beagle_schema';
 const SpecForm = (props) => {
   const { specName, id, existingFieldValues, onSave, specSchema } = props;
   const [formValues, setFormValues] = React.useState({});
-  // const [specSchema, setSpecSchema] = React.useState({});
-
-  // // Get spec schema for validation and form entries
-  // React.useEffect( () => {
-  //   if(!specSchema['fields']) getSpecSchema(specName, setSpecSchema);
-  // }, [])
 
   React.useEffect(() => {
     if (!existingFieldValues) return;
     setFormValues(existingFieldValues);
-  }, [existingFieldValues]);
+  }, [existingFieldValues, specName]);
 
   // Create object with initial values to use in Formik; ignores fields from db that are not in schema
   const initValues = {};
@@ -26,7 +20,6 @@ const SpecForm = (props) => {
   });
 
   // Set formik up to make form updates; initialize with existing form values
-  // formik functions values, handleChange, handleSubmit, errors, touched, handleBlur, isValid, dirty
   const formik = useFormik({   
     initialValues: initValues,
     enableReinitialize: true,
@@ -39,6 +32,7 @@ const SpecForm = (props) => {
 
   // Submit to database
   const handleSubmit = React.useCallback(() => {
+    console.log('saving')
     onSave(specName, id || null, formik.values);
   }, [specName, id, formik.values, onSave]);
 
@@ -57,14 +51,14 @@ const SpecForm = (props) => {
     if(field === 'email') fieldType = 'email';
     else if(field === 'password') fieldType = 'password';
     else if(field === 'verified_email') fieldType = 'checkbox';
-    else if(['last_login', 'created_at', 'updated_at'].includes(field)) fieldType = 'datetime-local';
-    // else if(field === 'phone_number') fieldType = 'number';
+    else if(['last_login', 'created_at', 'updated_at', 'time_placed'].includes(field)) fieldType = 'datetime-local';
     
     const error = formik.errors[field] && formik.touched[field] && 
       (<><br/><span className='form-error'>{formik.errors[field]}</span></>)
 
     // Select type of input element per field
-    if(field === 'role' || field === 'auth_provider') {
+    if(((field === 'role' || field === 'auth_provider') && specName === 'user') ||
+        (field === 'status' && specName === 'order')) {
       const options = specSchema['fields'][field]['type'].split(' | ');
       
       return (

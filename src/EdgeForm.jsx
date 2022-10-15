@@ -18,7 +18,7 @@ const EdgeForm = props => {
     const { specSchema, specName, id, existingFieldValues, onLoad, onSave } = props;
     const [edgeName, setEdgeName] = React.useState();
     const edgeTypes = specSchema['edges'];
-    const edges = existingFieldValues ? existingFieldValues[edgeName] : ['',''];
+    const edges = existingFieldValues ? existingFieldValues[edgeName] : [];
 
     // Choose edge type
     const handleEdgeSelect = React.useCallback((e) => {
@@ -34,6 +34,8 @@ const EdgeForm = props => {
 
         if(!edgeName) return alert('Select an edge type!');
         if(!edge_id) return alert('Enter an ID!')
+        if(!existingFieldValues[edgeName]) existingFieldValues[edgeName] = [];
+        if(existingFieldValues[edgeName].includes(edge_id)) return alert(`${edge_id} already exists!`);
 
         existingFieldValues[edgeName].push(edge_id);
         onSave(specName, id, existingFieldValues);
@@ -49,7 +51,8 @@ const EdgeForm = props => {
         }
     })
 
-    const edgeItems = edges.map((edge, idx) => {
+
+    const edgeItems = (edges || []).map((edge, idx) => {
         return (
             <EdgeItem key={idx} specName={specName} id={edge} onDelete={handleDeleteEdge} />
         )

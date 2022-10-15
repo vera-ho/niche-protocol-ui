@@ -73,9 +73,8 @@ const CartSchema = Yup.object().shape({
 
 const OrderSchema = Yup.object().shape({
     status: Yup.string(),
-    time_placed: Yup.date(),
-    total: Yup.number()
-        .nullable(),
+    time_placed: Yup.date().nullable(),
+    total: Yup.number().nullable(),
     shipping_cost: Yup.number(),
     created_at: Yup.date()
         .required('Creation date required')
