@@ -54,7 +54,7 @@ const EdgeForm = props => {
 
     const edgeItems = (edges || []).map((edge, idx) => {
         return (
-            <EdgeItem key={idx} specName={specName} id={edge} onDelete={handleDeleteEdge} />
+            <EdgeItem key={idx} specName={specName} edgeName={edgeName} id={edge} onDelete={handleDeleteEdge} />
         )
     })
 
@@ -87,19 +87,19 @@ const EdgeForm = props => {
 
 // Component for each edge associated with edge type
 const EdgeItem = props => {
-    const { specName, id, onDelete } = props;
+    const { specName, edgeName, id, onDelete } = props;
     const [edgeSpec, setEdgeSpec] = React.useState();
     
     // Retrieve spec associated with edge
-    const handleLoadEdgeSpec = React.useCallback(async (specName, id) => {
-        if(!specName || !id) return;
+    const handleLoadEdgeSpec = React.useCallback(async (edgeName, id) => {
+        if(!edgeName || !id) return;
 
-        const spec = await getSpec(`${specName}/${id}`);
-        if(!spec) return alert((`${specName}/${id} not found!`));
+        const spec = await getSpec(`${edgeName}/${id}`);
+        if(!spec) return alert((`${edgeName}/${id} not found!`));
         setEdgeSpec(spec);
     })
 
-    handleLoadEdgeSpec(specName, id);
+    handleLoadEdgeSpec(edgeName, id);
     const name = edgeSpec ? edgeSpec['name'] : 'No name available';
 
     return (
