@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { deleteSpec } from './util/firebase';
-// import { getSpecSchema } from './util/beagle_specs';
 import { BeagleSpecSchema } from './util/beagle_schema';
 
 const SpecForm = (props) => {
@@ -40,7 +39,6 @@ const SpecForm = (props) => {
     let msg = 'Are you sure you want to delete this spec?';
     if(confirm(msg)) {
       await deleteSpec(`${specName}/${id}`);
-      // return alert('Delete Successful!');
     } 
   })
 

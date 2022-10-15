@@ -100,10 +100,14 @@ function App() {
           specName={specName}
         />
       </div>
-      <hr/>
 
       <div>
-        <h3>all {specName} specs</h3>
+        {specItems.length > 0 && (
+          <div>
+            <hr/>
+            <h3>all {specName} specs</h3>
+          </div>
+        )}
         {specItems}
       </div>
       <hr/>
