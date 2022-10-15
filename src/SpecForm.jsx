@@ -1,17 +1,18 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { getSpecSchema } from './util/beagle_specs';
-import { BeagleSchema } from './util/beagle_schema';
+import { deleteSpec } from './util/firebase';
+// import { getSpecSchema } from './util/beagle_specs';
+import { BeagleSpecSchema } from './util/beagle_schema';
 
 const SpecForm = (props) => {
-  const { specName, id, existingFieldValues, onSave } = props;
+  const { specName, id, existingFieldValues, onSave, specSchema } = props;
   const [formValues, setFormValues] = React.useState({});
-  const [specSchema, setSpecSchema] = React.useState({});
+  // const [specSchema, setSpecSchema] = React.useState({});
 
-  // Get spec schema for validation and form entries
-  React.useEffect( () => {
-    if(!specSchema['fields']) getSpecSchema(specName, setSpecSchema);
-  }, [])
+  // // Get spec schema for validation and form entries
+  // React.useEffect( () => {
+  //   if(!specSchema['fields']) getSpecSchema(specName, setSpecSchema);
+  // }, [])
 
   React.useEffect(() => {
     if (!existingFieldValues) return;
@@ -29,16 +30,27 @@ const SpecForm = (props) => {
   const formik = useFormik({   
     initialValues: initValues,
     enableReinitialize: true,
-    validationSchema: BeagleSchema[specName],
+    validationSchema: BeagleSpecSchema[specName],
     onSubmit: () => {
       handleSubmit();     // update database
+      // formik.handleReset();
       setFormValues({});  // reset form
-    },
+    }
   });
 
+  // Submit to database
   const handleSubmit = React.useCallback(() => {
     onSave(specName, id || null, formik.values);
   }, [specName, id, formik.values, onSave]);
+
+  // Delete entire spec from database
+  const handleDelete = React.useCallback(async () => {
+    let msg = 'Are you sure you want to delete this spec?';
+    if(confirm(msg)) {
+      await deleteSpec(`${specName}/${id}`);
+      // return alert('Delete Successful!');
+    } 
+  })
 
   // Render each form field and its value
   const fields = Object.keys(formik.values || []).map( (field, idx) => {
@@ -96,6 +108,7 @@ const SpecForm = (props) => {
   });
 
   // SpecForm 
+  // reset intermittently works?
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className='spec-form-fields'>
@@ -104,9 +117,11 @@ const SpecForm = (props) => {
         </label>
         {fields}
       </div>
-      <div className='spec-form-submit-button'>
-        <button type="submit">Save</button>
+
+      <div>
+        <button type='button' onClick={handleDelete}>🗑</button>
         <button type='button' onClick={formik.handleReset}>Reset Form</button>
+        <button type="submit">Save</button>
       </div>
     </form>
   );

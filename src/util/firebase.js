@@ -8,7 +8,7 @@ import { config } from '../config.js';
 //   // Imported as config
 // };
 
-export const app = initializeApp(config);
+initializeApp(config);
 export const db = getFirestore();
 
 export const getSpec = async (path) => {
@@ -21,11 +21,6 @@ export const getSpecDocs = async (path) => {
   const collectionRef = collection(db, path);
   const res = await getDocs(collectionRef);
   return res;
-
-  // res.forEach((doc) => {
-  //   console.log(`${doc.id} => ${doc.data()}`);
-  //   console.log(doc.data())
-  // });
 }
 
 export const createSpec = async (path, values) => {
