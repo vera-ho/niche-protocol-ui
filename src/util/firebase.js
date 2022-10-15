@@ -31,7 +31,11 @@ export const createSpec = async (path, values) => {
 };
 
 export const updateSpec = async (path, values) => {
+  console.log(path)
+  console.log(values);
+  
   const docRef = doc(db, path);
+  console.log(docRef)
   await updateDoc(docRef, values);
   const res = await getDoc(docRef);
   return res.data();

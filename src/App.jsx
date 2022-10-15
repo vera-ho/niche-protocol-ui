@@ -30,6 +30,8 @@ function App() {
       return;
     }
 
+    console.log(values)
+    
     await updateSpec(`${specName}/${id}`, values);
   }, []);
 

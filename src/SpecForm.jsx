@@ -32,7 +32,6 @@ const SpecForm = (props) => {
 
   // Submit to database
   const handleSubmit = React.useCallback(() => {
-    console.log('saving')
     onSave(specName, id || null, formik.values);
   }, [specName, id, formik.values, onSave]);
 

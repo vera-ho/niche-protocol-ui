@@ -31,13 +31,12 @@ const EdgeForm = props => {
     // Retrieve spec associated with given edge ID
     const handleLoadSpec = React.useCallback(async (specName, id) => {
         if(!specName || !id) return alert('Specify both specName and id');
-
         const spec = await getSpec(`${specName}/${id}`);
         if(!spec) return alert((`${specName}/${id} not found!`));
         setEdgeSpec(spec);
     })
 
-    // Add new edge ID to own spec, and add own ID to edge spec
+    // Add new edge connection
     const handleAddEdge = React.useCallback(e => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -52,33 +51,55 @@ const EdgeForm = props => {
         if(!existingFieldValues[edgeName]) existingFieldValues[edgeName] = [];
         if(!edgeSpec[specName]) edgeSpec[specName] = [];
 
-        // Check if IDs already exist in the respective specs
-        if(existingFieldValues[edgeName].includes(edgeID)) return alert(`${edgeID} already exists in ${edgeName}`);
-        if(edgeSpec[specName].includes(specID)) return alert(`${specID} already exists in ${specName}`)
+        // Add edgeID to current spec if it doesn't exist
+        if(existingFieldValues[edgeName].includes(edgeID)) {
+            alert(`${edgeID} already exists in ${edgeName}`);
+        } else {
+            existingFieldValues[edgeName].push(edgeID);
+            onSave(specName, specID, existingFieldValues);
+        }
 
-        // Add edgeID to current spec
-        existingFieldValues[edgeName].push(edgeID);
-        onSave(specName, specID, existingFieldValues);
-
-        // Add current spec ID to edgeID's spec
-        edgeSpec[specName].push(specID);
-        onSave(edgeName, edgeID, edgeSpec)
-    })
-
-    // Remove selected edge and update spec
-    const handleDeleteEdge = React.useCallback(async (id) => {
-        let msg = 'Are you sure you want to delete this edge?';
-        if(confirm(msg)) {
-            // delete self from edge
-
-            // delete edge from self
-            let index = existingFieldValues[edgeName].indexOf(id);
-            delete existingFieldValues[edgeName][index];
-            onSave(specName, id, existingFieldValues);
+        // Add current spec ID to edgeID's spec if it doesn't exist
+        if(edgeSpec[specName].includes(specID)) {
+            alert(`${specID} already exists in ${specName}`)
+        } else {
+            edgeSpec[specName].push(specID);
+            onSave(edgeName, edgeID, edgeSpec);
         }
     })
 
+    // Remove edge connection
+    const handleDeleteEdge = React.useCallback(async (e) => {
+        e.preventDefault();
 
+        let msg = 'Are you sure you want to delete this edge?';
+        if(confirm(msg)) {
+            const edgeID = e.target.value;
+            const specID = id;
+
+            await handleLoadSpec(edgeName, edgeID);
+
+            // Delete self from edge's spec
+            let specIdx = edgeSpec[specName] ? edgeSpec[specName].indexOf(specID) : -1;
+            if(specIdx < 0) {
+                alert(`${specID} doesn't exist in ${specName}`)
+            } else {
+                edgeSpec[specName].splice(specIdx, 1)
+                onSave(edgeName, edgeID, edgeSpec);
+            }
+
+            // Delete edge ID from own spec
+            let edgeIdx = existingFieldValues[edgeName].indexOf(edgeID);
+            if(edgeIdx < 0) {
+                alert(`${edgeID} doesn't exist in ${edgeName}`) 
+            } else {
+                existingFieldValues[edgeName].splice(edgeIdx, 1)
+                onSave(specName, specID, existingFieldValues);
+            }
+        }
+    })
+
+    // Generate components for each edge 
     const edgeItems = (edges || []).map((edge, idx) => {
         return (
             <EdgeItem key={idx} specName={specName} edgeName={edgeName} id={edge} onDelete={handleDeleteEdge} />
@@ -114,7 +135,7 @@ const EdgeForm = props => {
 
 // Component for each edge associated with edge type
 const EdgeItem = props => {
-    const { specName, edgeName, id, onDelete } = props;
+    const { edgeName, id, onDelete } = props;
     const [edgeSpec, setEdgeSpec] = React.useState();
     
     // Retrieve spec associated with edge
@@ -134,7 +155,7 @@ const EdgeItem = props => {
             <div>
                 <span>{id || 'No ID available'}{' - '}</span>
                 <span>{name}</span>
-                <span><button type='button' onClick={onDelete}>🗑</button></span>
+                <span><button type='button' value={id} onClick={onDelete}>🗑</button></span>
             </div>
         </div>
     )
