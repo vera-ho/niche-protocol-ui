@@ -40,12 +40,56 @@ const UserEdgeSchema = Yup.object().shape({
         .max(36, 'UUID must be 36 characters long'))
 });
 
+const CustomerSchema = Yup.object().shape({
+    name: Yup.string()
+        .required('Name is required'),
+    billing_address: Yup.string()
+        .required('Billing address is required')
+        .nullable(),
+    shipping_address: Yup.string()
+        .required('Shipping address is required')
+        .nullable(),
+    created_at: Yup.date()
+        .required('Creation date required')
+        .nullable(),
+        // need to check creation date is not after current date?
+    updated_at: Yup.date()
+        .required('Update date required')
+        .nullable()
+        // need to check update date is after creation date and before current date?
+});
+
+const CartSchema = Yup.object().shape({
+    products: Yup.array().of(Yup.object()),
+    created_at: Yup.date()
+        .required('Creation date required')
+        .nullable(),
+        // need to check creation date is not after current date?
+    updated_at: Yup.date()
+        .required('Update date required')
+        .nullable()
+        // need to check update date is after creation date and before current date?
+});
+
+const OrderSchema = Yup.object().shape({
+    status: Yup.string(),
+    time_placed: Yup.date(),
+    total: Yup.number()
+        .nullable(),
+    shipping_cost: Yup.number(),
+    created_at: Yup.date()
+        .required('Creation date required')
+        .nullable(),
+        // need to check creation date is not after current date?
+    updated_at: Yup.date()
+        .required('Update date required')
+        .nullable()
+        // need to check update date is after creation date and before current date?
+});
+
 // TBD
-const CustomerSchema = {};
 const CustomerEdgeSchema = {};
-const OrderSchema = {};
 const OrderEdgeSchema = {};
-const CartSchema = {};
 const CartEdgeSchema = {};
 
 export const BeagleSpecSchema = {

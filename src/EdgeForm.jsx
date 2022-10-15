@@ -1,5 +1,5 @@
 import React from 'react';
-import { deleteSpec, getSpec } from './util/firebase';
+import { getSpec } from './util/firebase';
 // import { BeagleEdgeSchema } from './util/beagle_schema';
 // import { getSpecSchema } from './util/beagle_specs';
 
