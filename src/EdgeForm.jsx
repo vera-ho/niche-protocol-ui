@@ -1,6 +1,7 @@
 import React from 'react';
-import { BeagleEdgeSchema } from './util/beagle_schema';
-import { getSpecSchema } from './util/beagle_specs';
+import { deleteSpec, getSpec } from './util/firebase';
+// import { BeagleEdgeSchema } from './util/beagle_schema';
+// import { getSpecSchema } from './util/beagle_specs';
 
 /**
     Option to add new edge to specs in dropdown menu
@@ -17,6 +18,7 @@ const EdgeForm = props => {
     const { specSchema, specName, id, existingFieldValues, onLoad, onSave } = props;
     const [edgeName, setEdgeName] = React.useState();
     const edgeTypes = specSchema['edges'];
+    const edges = existingFieldValues ? existingFieldValues[edgeName] : [];
 
     // Choose edge type
     const handleEdgeSelect = React.useCallback((e) => {
@@ -37,9 +39,10 @@ const EdgeForm = props => {
         onSave(specName, id, existingFieldValues);
     })
 
-    // Remove selected edge
-    const handleDeleteEdge = React.useCallback(() => {
-
+    const edgeItems = edges.map((edge, idx) => {
+        return (
+            <EdgeItem key={idx} specName={specName} id={edge} />
+        )
     })
 
     return (
@@ -63,8 +66,34 @@ const EdgeForm = props => {
                 <button type='reset'>Clear UUID</button>
             </form>
 
-            
-            
+            <div>
+                <h4>{edgeName}</h4>
+                {edgeItems}
+            </div>
+        </div>
+    )
+}
+
+const EdgeItem = props => {
+    const { specName, id } = props;
+
+    // Remove selected edge
+    const handleDeleteEdge = React.useCallback(async () => {
+        let msg = 'Are you sure you want to delete this edge?';
+        if(confirm(msg)) await deleteSpec(`${specName}/${id}`);
+    })
+
+    const name = '';
+
+    return (
+        <div>
+            <div>
+                <span>{id}</span>
+                <span>{name}</span>
+            </div>
+            <div>
+                <button type='button' onClick={handleDeleteEdge}>🗑</button>
+            </div>
         </div>
     )
 }
