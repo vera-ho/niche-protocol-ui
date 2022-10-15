@@ -39,9 +39,19 @@ const EdgeForm = props => {
         onSave(specName, id, existingFieldValues);
     })
 
+    // Remove selected edge and update spec
+    const handleDeleteEdge = React.useCallback(async (id) => {
+        let msg = 'Are you sure you want to delete this edge?';
+        if(confirm(msg)) {
+            let index = existingFieldValues['edgeName'].indexOf(id);
+            delete existingFieldValues['edgeName'][index];
+            onSave(specName, id, existingFieldValues);
+        }
+    })
+
     const edgeItems = edges.map((edge, idx) => {
         return (
-            <EdgeItem key={idx} specName={specName} id={edge} />
+            <EdgeItem key={idx} specName={specName} id={edge} onDelete={handleDeleteEdge} />
         )
     })
 
@@ -74,20 +84,16 @@ const EdgeForm = props => {
 
 // Component for each edge associated with edge type
 const EdgeItem = props => {
-    const { specName, id } = props;
+    const { specName, id, onDelete } = props;
     const [edgeSpec, setEdgeSpec] = React.useState();
     
     // Retrieve spec associated with edge
     const handleLoadEdgeSpec = React.useCallback(async (specName, id) => {
+        if(!specName || !id) return;
+
         const spec = await getSpec(`${specName}/${id}`);
         if(!spec) return alert((`${specName}/${id} not found!`));
         setEdgeSpec(spec);
-    })
-
-    // Remove selected edge
-    const handleDeleteEdge = React.useCallback(async () => {
-        let msg = 'Are you sure you want to delete this edge?';
-        if(confirm(msg)) await deleteSpec(`${specName}/${id}`);
     })
 
     handleLoadEdgeSpec(specName, id);
@@ -98,7 +104,7 @@ const EdgeItem = props => {
             <div>
                 <span>{id || 'No ID available'}{' - '}</span>
                 <span>{name}</span>
-                <span><button type='button' onClick={handleDeleteEdge}>🗑</button></span>
+                <span><button type='button' onClick={onDelete}>🗑</button></span>
             </div>
         </div>
     )
