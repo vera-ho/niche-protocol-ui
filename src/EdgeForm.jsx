@@ -8,6 +8,7 @@ import { getSpec } from './util/firebase';
     - select which field to add entry to (drop down of options -> keys from edge schema for current spec)
     - field to enter ID number
     - button to submit, which adds ID to data structure holding all IDs for the specified field
+    - add self to given edge ID's spec
     Get existing edge information from existingFieldValues
     Destructure edge data from existingFieldValues
     - expect arrays of IDs
@@ -15,8 +16,9 @@ import { getSpec } from './util/firebase';
     Generate react component for each item that displays ID and name with option to delete
  */
 const EdgeForm = props => {
-    const { specSchema, specName, id, existingFieldValues, onLoad, onSave } = props;
-    const [edgeName, setEdgeName] = React.useState();
+    const { specSchema, specName, id, existingFieldValues, onSave } = props;
+    const [edgeName, setEdgeName] = React.useState('');
+    const [edgeSpec, setEdgeSpec] = React.useState({});
     const edgeTypes = specSchema['edges'];
     const edges = existingFieldValues ? existingFieldValues[edgeName] : [];
 
@@ -26,27 +28,52 @@ const EdgeForm = props => {
         setEdgeName(e.target.value);
     })
 
-    // Add new edge ID
+    // Retrieve spec associated with given edge ID
+    const handleLoadSpec = React.useCallback(async (specName, id) => {
+        if(!specName || !id) return alert('Specify both specName and id');
+
+        const spec = await getSpec(`${specName}/${id}`);
+        if(!spec) return alert((`${specName}/${id} not found!`));
+        setEdgeSpec(spec);
+    })
+
+    // Add new edge ID to own spec, and add own ID to edge spec
     const handleAddEdge = React.useCallback(e => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const edge_id = formData.get('id');
+        const edgeID = formData.get('id');
+        const specID = id;
 
         if(!edgeName) return alert('Select an edge type!');
-        if(!edge_id) return alert('Enter an ID!')
-        if(!existingFieldValues[edgeName]) existingFieldValues[edgeName] = [];
-        if(existingFieldValues[edgeName].includes(edge_id)) return alert(`${edge_id} already exists!`);
+        if(!edgeID) return alert('Enter an ID!')
+        handleLoadSpec(edgeName, edgeID);
 
-        existingFieldValues[edgeName].push(edge_id);
-        onSave(specName, id, existingFieldValues);
+        // Create array if it doesn't exist so that IDs can be pushed
+        if(!existingFieldValues[edgeName]) existingFieldValues[edgeName] = [];
+        if(!edgeSpec[specName]) edgeSpec[specName] = [];
+
+        // Check if IDs already exist in the respective specs
+        if(existingFieldValues[edgeName].includes(edgeID)) return alert(`${edgeID} already exists in ${edgeName}`);
+        if(edgeSpec[specName].includes(specID)) return alert(`${specID} already exists in ${specName}`)
+
+        // Add edgeID to current spec
+        existingFieldValues[edgeName].push(edgeID);
+        onSave(specName, specID, existingFieldValues);
+
+        // Add current spec ID to edgeID's spec
+        edgeSpec[specName].push(specID);
+        onSave(edgeName, edgeID, edgeSpec)
     })
 
     // Remove selected edge and update spec
     const handleDeleteEdge = React.useCallback(async (id) => {
         let msg = 'Are you sure you want to delete this edge?';
         if(confirm(msg)) {
-            let index = existingFieldValues['edgeName'].indexOf(id);
-            delete existingFieldValues['edgeName'][index];
+            // delete self from edge
+
+            // delete edge from self
+            let index = existingFieldValues[edgeName].indexOf(id);
+            delete existingFieldValues[edgeName][index];
             onSave(specName, id, existingFieldValues);
         }
     })
