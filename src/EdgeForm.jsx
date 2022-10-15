@@ -1,20 +1,6 @@
 import React from 'react';
 import { getSpec } from './util/firebase';
-// import { BeagleEdgeSchema } from './util/beagle_schema';
-// import { getSpecSchema } from './util/beagle_specs';
 
-/**
-    Option to add new edge to specs in dropdown menu
-    - select which field to add entry to (drop down of options -> keys from edge schema for current spec)
-    - field to enter ID number
-    - button to submit, which adds ID to data structure holding all IDs for the specified field
-    - add self to given edge ID's spec
-    Get existing edge information from existingFieldValues
-    Destructure edge data from existingFieldValues
-    - expect arrays of IDs
-    Get spec data of each ID
-    Generate react component for each item that displays ID and name with option to delete
- */
 const EdgeForm = props => {
     const { specSchema, specName, id, existingFieldValues, onSave } = props;
     const [edgeName, setEdgeName] = React.useState('');

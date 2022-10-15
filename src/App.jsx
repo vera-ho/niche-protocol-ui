@@ -3,6 +3,7 @@ import { uuidv4 } from '@firebase/util';
 import { createSpec, getSpec, getSpecDocs, updateSpec } from './util/firebase';
 import { getSpecTypes, getSpecSchema } from './util/beagle_specs';
 import LookupForm from './LookupForm';
+import SpecItem from './SpecItem';
 import SpecForm from './SpecForm';
 import EdgeForm from './EdgeForm';
 import './App.css'
@@ -13,7 +14,6 @@ function App() {
   const [specSchema, setSpecSchema] = React.useState({});
   const [existingSpec, setExistingSpec] = React.useState();
   const [existingDocs, setExistingDocs] = React.useState([]);
-  // const [errors, setErrors] = React.useState();  // done by Yup
 
   // Get spec types for document creation and loading and spec schema for validation/form entries
   // Try this later: https://github.com/reactjs/rfcs/pull/229
@@ -30,8 +30,6 @@ function App() {
       return;
     }
 
-    console.log(values)
-    
     await updateSpec(`${specName}/${id}`, values);
   }, []);
 
@@ -59,6 +57,12 @@ function App() {
     setExistingSpec(items[0]);
   }, []);
 
+  const specItems = existingDocs.map((spec, idx) => {
+    return (
+        <SpecItem key={idx} itemNum={idx} spec={spec} specName={specName} setExistingSpec={setExistingSpec} />
+    )
+  }); 
+
   // Set specName from dropdown for entire app
   const handleSpecSelect = React.useCallback((e) => {
     e.preventDefault();
@@ -74,6 +78,7 @@ function App() {
 
     setExistingSpec(initValues);
   })
+
 
   return (
     <div>
@@ -94,6 +99,12 @@ function App() {
           onLoadAll={handleLoadAll}
           specName={specName}
         />
+      </div>
+      <hr/>
+
+      <div>
+        <h3>all {specName} specs</h3>
+        {specItems}
       </div>
       <hr/>
 
@@ -141,7 +152,6 @@ function App() {
             onSave={handleSave}
           />
         }
-        
       </div>
     </div>
   )
