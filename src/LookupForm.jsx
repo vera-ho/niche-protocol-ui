@@ -1,7 +1,6 @@
 import React from 'react';
 
 const LookupForm = (props) => {
-    // Should put specName in props, and dropdown in App.jsx to be used in both forms
     const { onLoadOne, onLoadAll, specName } = props;
 
     return (
@@ -24,11 +23,6 @@ const LookupForm = (props) => {
 
         }}>
 
-        {/* <label>spec type:
-            <select name="spec_name">
-                {specTypes.map((spec, idx) => <option key={idx}>{spec}</option>)}
-            </select>
-        </label> */}
         <label>Existing spec id:
             <input name="id" type="text" />
         </label>

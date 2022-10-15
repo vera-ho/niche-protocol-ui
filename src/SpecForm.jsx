@@ -33,7 +33,6 @@ const SpecForm = (props) => {
     validationSchema: BeagleSpecSchema[specName],
     onSubmit: () => {
       handleSubmit();     // update database
-      // formik.handleReset();
       setFormValues({});  // reset form
     }
   });

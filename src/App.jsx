@@ -16,8 +16,9 @@ function App() {
   const [errors, setErrors] = React.useState();
 
   // Get spec types for document creation and loading and spec schema for validation/form entries
+  // Try this later: https://github.com/reactjs/rfcs/pull/229
   React.useEffect( () => {
-    getSpecTypes(setSpecTypes);
+    if(!specTypes.length) getSpecTypes(setSpecTypes);
     if(!specSchema['fields']) getSpecSchema(specName, setSpecSchema);
   }, [])
 
@@ -78,10 +79,10 @@ function App() {
 
       <div>
         <label>spec type:
-              <select name="spec_name" onChange={handleSpecSelect} value={specName}>
-                  {specTypes.map((spec, idx) => <option key={idx} value={spec}>{spec}</option>)}
-              </select>
-          </label>
+          <select name="spec_name" onChange={handleSpecSelect} value={specName}>
+              {specTypes.map((spec, idx) => <option key={idx} value={spec}>{spec}</option>)}
+          </select>
+        </label>
       </div>
 
       <div>
@@ -121,8 +122,22 @@ function App() {
       <hr/>
       <div>
         <h3>Edges</h3>
-        <EdgeForm />
-
+        {existingSpec ?
+          <EdgeForm 
+            specSchema={specSchema}
+            specName={specName}
+            id={existingSpec.id}
+            existingFieldValues={existingSpec}
+            onLoad={handleLoadOne}
+          />
+        : 
+          <EdgeForm 
+            specSchema={specSchema}
+            specName={specName}
+            onLoad={handleLoadOne}
+          />
+        }
+        
       </div>
     </div>
   )
