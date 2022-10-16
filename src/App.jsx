@@ -67,6 +67,8 @@ function App() {
   const handleSpecSelect = React.useCallback((e) => {
     e.preventDefault();
     setSpecName(e.target.value);
+    setExistingSpec({});
+    setExistingDocs([]);
   })
 
   // Reset all fields - datetime pickers seem not resettable
@@ -83,79 +85,91 @@ function App() {
     <div>
       <h1>Beagle Data Manager</h1>
 
-      <div>
-        <label>spec type:
-          <select name="spec_name" onChange={handleSpecSelect} value={specName}>
-              {specTypes.map((spec, idx) => <option key={idx} value={spec}>{spec}</option>)}
-          </select>
-        </label>
-      </div>
-
-      <div>
-        <h3>Lookup Spec(s)</h3>
-        <LookupForm 
-          onLoadOne={handleLoadOne} 
-          onLoadAll={handleLoadAll}
-          specName={specName}
-        />
-      </div>
-
-      <div>
-        {specItems.length > 0 && (
-          <div>
-            <hr/>
-            <h3>all {specName} specs</h3>
+      <div className='nav-bar-container'>
+        <div className='nav-bar-content'>
+          <div className='spec-type-selection'>
+            <label>spec type:
+              <select name="spec_name" onChange={handleSpecSelect} value={specName}>
+                  {specTypes.map((spec, idx) => <option key={idx} value={spec}>{spec}</option>)}
+              </select>
+            </label>
           </div>
-        )}
-        {specItems}
-      </div>
-      <hr/>
-
-      <div>
-        <button type='button' onClick={handleAddNew}>Add New Entry</button>
-      </div>
-    
-      <div>
-        <h3>Spec Details</h3>
-        {existingSpec
-        ?
-          <SpecForm
-            specName={specName}  
-            id={existingSpec.id}
-            existingFieldValues={existingSpec}
-            onSave={handleSave}   
-            specSchema={specSchema}      
-          />
-        :
-          <SpecForm
-            specName={specName}
-            specSchema={specSchema}      
-            onSave={handleSave}
-          />
-        }
+          <div className='look-up-form'>
+            {/* <h3>Lookup Spec(s)</h3> */}
+            <LookupForm 
+              onLoadOne={handleLoadOne} 
+              onLoadAll={handleLoadAll}
+              specName={specName}
+            />
+          </div>
+        </div>
       </div>
 
-      <hr/>
-      <div>
-        <h3>Edges</h3>
-        {existingSpec ?
-          <EdgeForm 
-            specSchema={specSchema}
-            specName={specName}
-            id={existingSpec.id}
-            existingFieldValues={existingSpec}
-            onLoad={handleLoadOne}
-            onSave={handleSave}
-          />
-        : 
-          <EdgeForm 
-            specSchema={specSchema}
-            specName={specName}
-            onLoad={handleLoadOne}
-            onSave={handleSave}
-          />
-        }
+      <div className='spec-container'>
+        <div className='spec-content'>
+          <div className='spec-index-content'>
+            {specItems.length > 0 && (
+              <div>
+                {/* <hr/> */}
+                <h3>all {specName} specs</h3>
+              </div>
+            )}
+            {specItems}
+          </div>
+
+          <div className='spec-details-content'>
+            <div className='spec-add-new-entry'>
+              <button type='button' onClick={handleAddNew}>Add New Entry</button>
+            </div>
+          
+            <div className='spec-form-details'>
+              <h3>Spec Details</h3>
+              {existingSpec
+              ?
+                <SpecForm
+                  specName={specName}  
+                  id={existingSpec.id}
+                  existingFieldValues={existingSpec}
+                  onSave={handleSave}   
+                  specSchema={specSchema}      
+                />
+              :
+                <SpecForm
+                  specName={specName}
+                  specSchema={specSchema}      
+                  onSave={handleSave}
+                />
+              }
+            </div>
+
+            <div className='edge-form-container'>
+              <h3>Edges</h3>
+              {existingSpec ?
+                <EdgeForm 
+                  specSchema={specSchema}
+                  specName={specName}
+                  id={existingSpec.id}
+                  existingFieldValues={existingSpec}
+                  onLoad={handleLoadOne}
+                  onSave={handleSave}
+                />
+              : 
+                <EdgeForm 
+                  specSchema={specSchema}
+                  specName={specName}
+                  onLoad={handleLoadOne}
+                  onSave={handleSave}
+                />
+              }
+            </div>
+          </div>
+        </div>
       </div>
+      {/* <hr/> */}
+
+
+      {/* <hr/> */}
+
     </div>
   )
 }

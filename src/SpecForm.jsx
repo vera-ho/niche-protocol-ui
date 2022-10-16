@@ -60,7 +60,7 @@ const SpecForm = (props) => {
       const options = specSchema['fields'][field]['type'].split(' | ');
       
       return (
-        <label key={idx}>{field}
+        <label key={idx} className='spec-form-element'>{field}
           <select 
             name={field}
             value={formik.values[field]}
@@ -82,7 +82,7 @@ const SpecForm = (props) => {
       )
     } else {
       return (
-        <label key={idx}>{field}
+        <label key={idx} className='spec-form-element'>{field}
           <input
             type={fieldType}
             name={field}

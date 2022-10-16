@@ -7,10 +7,11 @@ UI interface using Beagle Schema and Firestore database
 ## Milestones
 - [x] SpecForm - add and load/update specs from the database
 - [x] EdgeForm - load current edges, add new edge and delete edge
-- [ ] Modal - Skip 
+- [ ] Modal
 - [x] List all specs in collection 
 - [x] Show details of a specific spec 
 - [x] Search for a spec by it's ID 
+- [ ] Styling
 
 ## Main App
 A dropdown menu is used to select a spec type, which is then the spec type for the entire app. The main app also has the following functions to query and update the Firestore database:

@@ -39,3 +39,79 @@
 .read-the-docs {
   color: #888;
 }
+
+.nav-bar-container {
+  /* border: 1px white solid; */
+  width: 100%;
+}
+
+.nav-bar-content {
+  width: 100%;
+  padding-bottom: 15px;
+  /* border: 1px white solid; */
+}
+
+.nav-bar-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.spec-type-selection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 10px;
+}
+
+.spec-container {
+  width: 100%;
+  /* border: 1px white solid; */
+}
+
+.spec-content {
+  display:flex;
+  flex-direction: row;
+}
+
+.spec-index-content {
+  min-width: 50%;
+  /* border: 1px yellow solid; */
+  border-right: 1px solid white;
+  box-sizing:border-box;
+  padding: 10px;
+}
+
+.spec-details-content {
+  /* border: 1px pink solid; */
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.spec-form-fields {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: left; */
+}
+
+.spec-form-element,
+.spec-list-item {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin: 2px 0px;
+  /* align-items: flex-start; */
+}
+
+button {
+  margin: 2px;
+}
+
+.edge-form > span {
+  margin: 0px 2px;
+}
+
+label {
+  align-items: center;
+  justify-content: left;
+}

@@ -107,6 +107,7 @@ const EdgeForm = props => {
                 <label>add id to edge: 
                     <input name='id' type='text'/>
                 </label>
+                <br></br>
                 <button type='submit'>Add ID</button>
                 <button type='reset'>Clear UUID</button>
             </form>
@@ -138,7 +139,7 @@ const EdgeItem = props => {
 
     return (
         <div>
-            <div>
+            <div className='edge-form'>
                 <span>{id || 'No ID available'}{' - '}</span>
                 <span>{name}</span>
                 <span><button type='button' value={id} onClick={onDelete}>🗑</button></span>
