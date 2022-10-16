@@ -7,7 +7,6 @@ const LookupForm = (props) => {
         <form onSubmit={ (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            // const specName = formData.get('spec_name');
             const id = formData.get('id');
 
             if(!specName) {
@@ -20,7 +19,6 @@ const LookupForm = (props) => {
             } else {
                 onLoadOne(specName, id);
             }
-
         }}>
 
         <label>Existing spec id:

@@ -79,7 +79,6 @@ function App() {
     setExistingSpec(initValues);
   })
 
-
   return (
     <div>
       <h1>Beagle Data Manager</h1>

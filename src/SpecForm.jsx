@@ -50,7 +50,7 @@ const SpecForm = (props) => {
     else if(field === 'verified_email') fieldType = 'checkbox';
     else if(['last_login', 'created_at', 'updated_at', 'time_placed'].includes(field)) fieldType = 'datetime-local';
     else if(field === 'total' || field === 'shipping_cost') fieldType = 'number';
-    
+
     const error = formik.errors[field] && formik.touched[field] && 
       (<><br/><span className='form-error'>{formik.errors[field]}</span></>)
 
@@ -95,11 +95,9 @@ const SpecForm = (props) => {
         </label>
       )
     }
-
   });
 
   // SpecForm 
-  // reset intermittently works?
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className='spec-form-fields'>
