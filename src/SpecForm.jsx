@@ -101,7 +101,7 @@ const SpecForm = (props) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className='spec-form-fields'>
-        <label>id: {formValues['id']}
+        <label className='spec-form-element'>id: {formValues['id']}
           <br></br>
         </label>
         {fields}

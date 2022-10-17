@@ -33,14 +33,14 @@ const UserSchema = Yup.object().shape({
         .nullable()
 })
 
-const UserEdgeSchema = Yup.object().shape({
-    customer: Yup.array().of(Yup.string()
-        .min(36, 'UUID must be 36 characters long')
-        .max(36, 'UUID must be 36 characters long')),
-    shopping_carts: Yup.array().of(Yup.string()
-        .min(36, 'UUID must be 36 characters long')  
-        .max(36, 'UUID must be 36 characters long'))
-});
+// const UserEdgeSchema = Yup.object().shape({
+//     customer: Yup.array().of(Yup.string()
+//         .min(36, 'UUID must be 36 characters long')
+//         .max(36, 'UUID must be 36 characters long')),
+//     shopping_carts: Yup.array().of(Yup.string()
+//         .min(36, 'UUID must be 36 characters long')  
+//         .max(36, 'UUID must be 36 characters long'))
+// });
 
 const CustomerSchema = Yup.object().shape({
     name: Yup.string()
@@ -92,9 +92,9 @@ const OrderSchema = Yup.object().shape({
 });
 
 // TBD
-const CustomerEdgeSchema = {};
-const OrderEdgeSchema = {};
-const CartEdgeSchema = {};
+// const CustomerEdgeSchema = {};
+// const OrderEdgeSchema = {};
+// const CartEdgeSchema = {};
 
 export const BeagleSpecSchema = {
     user: UserSchema,
@@ -103,9 +103,9 @@ export const BeagleSpecSchema = {
     shopping_cart: CartSchema
 };
 
-export const BeagleEdgeSchema = {
-    user: UserEdgeSchema,
-    customer: CustomerEdgeSchema,
-    order: OrderEdgeSchema,
-    shopping_cart: CartEdgeSchema
-}
+// export const BeagleEdgeSchema = {
+//     user: UserEdgeSchema,
+//     customer: CustomerEdgeSchema,
+//     order: OrderEdgeSchema,
+//     shopping_cart: CartEdgeSchema
+// }

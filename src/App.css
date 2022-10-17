@@ -91,10 +91,11 @@
 .spec-form-fields {
   display: flex;
   flex-direction: column;
-  /* justify-content: left; */
+  justify-content: left;
 }
 
 .spec-form-element,
+.edge-form-fields,
 .spec-list-item {
   display: flex;
   justify-content: left;
@@ -111,7 +112,7 @@ button {
   margin: 0px 2px;
 }
 
-label {
+/* label {
   align-items: center;
   justify-content: left;
-}
+} */

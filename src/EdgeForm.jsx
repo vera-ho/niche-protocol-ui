@@ -94,7 +94,7 @@ const EdgeForm = props => {
 
     return (
         <div>
-            <label>edge type: 
+            <label className='edge-form-fields'>edge type: 
                 <select name='edge_type' onChange={handleEdgeSelect} value={edgeName}>
                     <option value='Select an edge type'>Select an edge type</option>
                     {Object.keys(edgeTypes || {}).map( (edge, idx) => {
@@ -104,7 +104,7 @@ const EdgeForm = props => {
             </label>
 
             <form onSubmit={handleAddEdge}>
-                <label>add id to edge: 
+                <label className='edge-form-fields'>add id to edge: 
                     <input name='id' type='text'/>
                 </label>
                 <br></br>
