@@ -57,7 +57,6 @@ function App() {
     setExistingDocs(items);
     setExistingSpec(items[0]);
   }, []);
-
   
   // Set specName from dropdown for entire app
   const handleSpecSelect = React.useCallback((e) => {
@@ -144,7 +143,8 @@ function App() {
                   specName={specName}  
                   id={existingSpec.id}
                   existingFieldValues={existingSpec}
-                  onSave={handleSave}   
+                  onSave={handleSave} 
+                  onLoadAll={handleLoadAll}  
                   specSchema={specSchema}    
                   setSpec={setExistingSpec}  
                 />
@@ -153,6 +153,7 @@ function App() {
                   specName={specName}
                   specSchema={specSchema}      
                   onSave={handleSave}
+                  onLoadAll={handleLoadAll}
                   setSpec={setExistingSpec}
                 />
               }

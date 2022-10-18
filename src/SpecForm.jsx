@@ -4,7 +4,7 @@ import { deleteSpec } from './util/firebase';
 import { BeagleSpecSchema } from './util/beagle_schema';
 
 const SpecForm = (props) => {
-  const { specName, id, existingFieldValues, onSave, specSchema, setSpec } = props;
+  const { specName, id, existingFieldValues, onSave, specSchema, onLoadAll } = props;
   const [formValues, setFormValues] = React.useState({});
 
   React.useEffect(() => {
@@ -30,18 +30,18 @@ const SpecForm = (props) => {
     }
   });
 
-  // Submit to database
+  // Submit to database and show appropriate alert
   const handleSubmit = React.useCallback(async () => {
     const spec = await onSave(specName, id || null, formik.values);
+
     if(!id && spec) {
       alert(`Successfully created new entry, id: ${spec.id}`);
+      onLoadAll(specName);
     } else if (!id && !spec) {
       alert(`Error: Could not save entry`);
-    }
-
-    if(id && spec) {
+    } else if(id && spec) {
       alert(`Successfully updated ${id}`);
-    } else {
+    } else if(id && !spec) {
       alert(`Error: Could not update ${id}`);
     }
   }, [specName, id, formik.values, onSave]);
@@ -51,8 +51,7 @@ const SpecForm = (props) => {
     let msg = 'Are you sure you want to delete this spec?';
     if(confirm(msg)) {
       await deleteSpec(`${specName}/${id}`);
-
-      // delete spec from list of specs?
+      onLoadAll(specName);
     } 
   })
 
