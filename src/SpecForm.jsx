@@ -34,7 +34,15 @@ const SpecForm = (props) => {
   const handleSubmit = React.useCallback(async () => {
     const spec = await onSave(specName, id || null, formik.values);
     if(!id && spec) {
-      alert(`Successfully created new entry, id: ${spec.id}`)
+      alert(`Successfully created new entry, id: ${spec.id}`);
+    } else if (!id && !spec) {
+      alert(`Error: Could not save entry`);
+    }
+
+    if(id && spec) {
+      alert(`Successfully updated ${id}`);
+    } else {
+      alert(`Error: Could not update ${id}`);
     }
   }, [specName, id, formik.values, onSave]);
 
