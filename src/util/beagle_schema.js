@@ -33,15 +33,6 @@ const UserSchema = Yup.object().shape({
         .nullable()
 })
 
-// const UserEdgeSchema = Yup.object().shape({
-//     customer: Yup.array().of(Yup.string()
-//         .min(36, 'UUID must be 36 characters long')
-//         .max(36, 'UUID must be 36 characters long')),
-//     shopping_carts: Yup.array().of(Yup.string()
-//         .min(36, 'UUID must be 36 characters long')  
-//         .max(36, 'UUID must be 36 characters long'))
-// });
-
 const CustomerSchema = Yup.object().shape({
     name: Yup.string()
         .required('Name is required'),
@@ -63,7 +54,7 @@ const CustomerSchema = Yup.object().shape({
 });
 
 const CartSchema = Yup.object().shape({
-    products: Yup.array().of(Yup.object()),
+    products: Yup.array().of(Yup.object()).nullable(),
     created_at: Yup.date()
         .required('Creation date required')
         .max(new Date(), 'Create date cannot be after today')
@@ -91,21 +82,9 @@ const OrderSchema = Yup.object().shape({
         .nullable()
 });
 
-// TBD
-// const CustomerEdgeSchema = {};
-// const OrderEdgeSchema = {};
-// const CartEdgeSchema = {};
-
 export const BeagleSpecSchema = {
     user: UserSchema,
     customer: CustomerSchema,
     order: OrderSchema,
     shopping_cart: CartSchema
 };
-
-// export const BeagleEdgeSchema = {
-//     user: UserEdgeSchema,
-//     customer: CustomerEdgeSchema,
-//     order: OrderEdgeSchema,
-//     shopping_cart: CartEdgeSchema
-// }
