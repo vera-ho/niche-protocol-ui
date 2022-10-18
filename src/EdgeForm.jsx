@@ -18,7 +18,7 @@ const EdgeForm = props => {
     const handleLoadSpec = React.useCallback(async (specName, id) => {
         if(!specName || !id) return alert('Specify both specName and id');
         const spec = await getSpec(`${specName}/${id}`);
-        if(!spec) return alert((`${specName}/${id} not found!`));
+        if(!spec) return alert((`alert 1 ${specName}/${id} not found!`));
         setEdgeSpec(spec);
     })
 
@@ -28,10 +28,12 @@ const EdgeForm = props => {
         const formData = new FormData(e.target);
         const edgeID = formData.get('id');
         const specID = id;
+        const alias = edgeName === 'owner' ? 'user' : edgeName;
 
         if(!edgeName) return alert('Select an edge type!');
         if(!edgeID) return alert('Enter an ID!')
-        handleLoadSpec(edgeName, edgeID);
+        
+        handleLoadSpec(alias, edgeID);
 
         // Create array if it doesn't exist so that IDs can be pushed
         if(!existingFieldValues[edgeName]) existingFieldValues[edgeName] = [];
@@ -46,11 +48,14 @@ const EdgeForm = props => {
         }
 
         // Add current spec ID to edgeID's spec if it doesn't exist
+        console.log('handleAddEdge specName: ' + specName)
+        console.log(edgeSpec)
+        console.log(existingFieldValues)
         if(edgeSpec[specName].includes(specID)) {
-            alert(`${specID} already exists in ${specName}`)
+            alert(`alert 2 ${specID} already exists in ${specName}`)
         } else {
             edgeSpec[specName].push(specID);
-            onSave(edgeName, edgeID, edgeSpec);
+            onSave(alias, edgeID, edgeSpec);
         }
     })
 
@@ -62,22 +67,24 @@ const EdgeForm = props => {
         if(confirm(msg)) {
             const edgeID = e.target.value;
             const specID = id;
+            const alias = edgeName === 'owner' ? 'user' : edgeName;
 
-            await handleLoadSpec(edgeName, edgeID);
+            await handleLoadSpec(alias, edgeID);
 
             // Delete self from edge's spec
             let specIdx = edgeSpec[specName] ? edgeSpec[specName].indexOf(specID) : -1;
             if(specIdx < 0) {
-                alert(`${specID} doesn't exist in ${specName}`)
+                alert(`alert 3 ${specID} doesn't exist in ${specName}`);
             } else {
                 edgeSpec[specName].splice(specIdx, 1)
-                onSave(edgeName, edgeID, edgeSpec);
+                await onSave(alias, edgeID, edgeSpec);
+                setEdgeSpec({});
             }
 
             // Delete edge ID from own spec
             let edgeIdx = existingFieldValues[edgeName].indexOf(edgeID);
             if(edgeIdx < 0) {
-                alert(`${edgeID} doesn't exist in ${edgeName}`) 
+                alert(`alert 4 ${edgeID} doesn't exist in ${edgeName}`) 
             } else {
                 existingFieldValues[edgeName].splice(edgeIdx, 1)
                 onSave(specName, specID, existingFieldValues);
@@ -87,8 +94,9 @@ const EdgeForm = props => {
 
     // Generate components for each edge 
     const edgeItems = (edges || []).map((edge, idx) => {
+        const alias = edgeName === 'owner' ? 'user' : edgeName;
         return (
-            <EdgeItem key={idx} specName={specName} edgeName={edgeName} id={edge} onDelete={handleDeleteEdge} />
+            <EdgeItem key={idx} specName={specName} edgeName={alias} id={edge} onDelete={handleDeleteEdge} />
         )
     })
 
@@ -128,9 +136,8 @@ const EdgeItem = props => {
     // Retrieve spec associated with edge
     const handleLoadEdgeSpec = React.useCallback(async (edgeName, id) => {
         if(!edgeName || !id) return;
-
         const spec = await getSpec(`${edgeName}/${id}`);
-        if(!spec) return alert((`${edgeName}/${id} not found!`));
+        if(!spec) return alert((`alert 5 ${edgeName}/${id} not found!`));
         setEdgeSpec(spec);
     })
 
