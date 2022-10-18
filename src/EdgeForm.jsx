@@ -48,9 +48,6 @@ const EdgeForm = props => {
         }
 
         // Add current spec ID to edgeID's spec if it doesn't exist
-        console.log('handleAddEdge specName: ' + specName)
-        console.log(edgeSpec)
-        console.log(existingFieldValues)
         if(edgeSpec[specName].includes(specID)) {
             alert(`${specID} already exists in ${specName}`)
         } else {
