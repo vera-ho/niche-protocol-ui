@@ -18,7 +18,7 @@ const EdgeForm = props => {
     const handleLoadSpec = React.useCallback(async (specName, id) => {
         if(!specName || !id) return alert('Specify both specName and id');
         const spec = await getSpec(`${specName}/${id}`);
-        if(!spec) return alert((`alert 1 ${specName}/${id} not found!`));
+        if(!spec) return alert((`${specName}/${id} not found!`));
         setEdgeSpec(spec);
     })
 
@@ -52,7 +52,7 @@ const EdgeForm = props => {
         console.log(edgeSpec)
         console.log(existingFieldValues)
         if(edgeSpec[specName].includes(specID)) {
-            alert(`alert 2 ${specID} already exists in ${specName}`)
+            alert(`${specID} already exists in ${specName}`)
         } else {
             edgeSpec[specName].push(specID);
             onSave(alias, edgeID, edgeSpec);
@@ -74,7 +74,7 @@ const EdgeForm = props => {
             // Delete self from edge's spec
             let specIdx = edgeSpec[specName] ? edgeSpec[specName].indexOf(specID) : -1;
             if(specIdx < 0) {
-                alert(`alert 3 ${specID} doesn't exist in ${specName}`);
+                alert(`${specID} doesn't exist in ${specName}`);
             } else {
                 edgeSpec[specName].splice(specIdx, 1)
                 await onSave(alias, edgeID, edgeSpec);
@@ -84,7 +84,7 @@ const EdgeForm = props => {
             // Delete edge ID from own spec
             let edgeIdx = existingFieldValues[edgeName].indexOf(edgeID);
             if(edgeIdx < 0) {
-                alert(`alert 4 ${edgeID} doesn't exist in ${edgeName}`) 
+                alert(`${edgeID} doesn't exist in ${edgeName}`) 
             } else {
                 existingFieldValues[edgeName].splice(edgeIdx, 1)
                 onSave(specName, specID, existingFieldValues);
@@ -137,7 +137,7 @@ const EdgeItem = props => {
     const handleLoadEdgeSpec = React.useCallback(async (edgeName, id) => {
         if(!edgeName || !id) return;
         const spec = await getSpec(`${edgeName}/${id}`);
-        if(!spec) return alert((`alert 5 ${edgeName}/${id} not found!`));
+        if(!spec) return alert((`${edgeName}/${id} not found!`));
         setEdgeSpec(spec);
     })
 
