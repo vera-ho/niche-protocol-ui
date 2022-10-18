@@ -31,8 +31,11 @@ const SpecForm = (props) => {
   });
 
   // Submit to database
-  const handleSubmit = React.useCallback(() => {
-    onSave(specName, id || null, formik.values);
+  const handleSubmit = React.useCallback(async () => {
+    const spec = await onSave(specName, id || null, formik.values);
+    if(!id && spec) {
+      alert(`Successfully created new entry, id: ${spec.id}`)
+    }
   }, [specName, id, formik.values, onSave]);
 
   // Delete entire spec from database
