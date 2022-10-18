@@ -4,7 +4,7 @@ import { deleteSpec } from './util/firebase';
 import { BeagleSpecSchema } from './util/beagle_schema';
 
 const SpecForm = (props) => {
-  const { specName, id, existingFieldValues, onSave, specSchema } = props;
+  const { specName, id, existingFieldValues, onSave, specSchema, setSpec } = props;
   const [formValues, setFormValues] = React.useState({});
 
   React.useEffect(() => {
@@ -24,8 +24,9 @@ const SpecForm = (props) => {
     enableReinitialize: true,
     validationSchema: BeagleSpecSchema[specName],
     onSubmit: () => {
-      handleSubmit();     // update database
-      setFormValues({});  // reset form
+      handleSubmit();
+      formik.handleReset();
+      setFormValues({})
     }
   });
 
@@ -39,6 +40,8 @@ const SpecForm = (props) => {
     let msg = 'Are you sure you want to delete this spec?';
     if(confirm(msg)) {
       await deleteSpec(`${specName}/${id}`);
+
+      // delete spec from list of specs?
     } 
   })
 
@@ -77,7 +80,7 @@ const SpecForm = (props) => {
             })}
           </select>
           {error}
-          <br></br>
+          <br/>
         </label>
       )
     } else {
@@ -91,7 +94,7 @@ const SpecForm = (props) => {
             onBlur={formik.handleBlur}
           />
           {error}
-          <br></br>
+          <br/>
         </label>
       )
     }
@@ -101,9 +104,8 @@ const SpecForm = (props) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className='spec-form-fields'>
-        <label className='spec-form-element'>id: {formValues['id']}
-          <br></br>
-        </label>
+        <label className='spec-form-element'>id: {formValues['id']}</label>
+        <br/>
         {fields}
       </div>
 

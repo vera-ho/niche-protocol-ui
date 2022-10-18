@@ -107,7 +107,7 @@ const EdgeForm = props => {
                 <label className='edge-form-fields'>add id to edge: 
                     <input name='id' type='text'/>
                 </label>
-                <br></br>
+                <br/>
                 <button type='submit'>Add ID</button>
                 <button type='reset'>Clear UUID</button>
             </form>

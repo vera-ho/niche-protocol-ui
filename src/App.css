@@ -40,6 +40,7 @@
   color: #888;
 }
 
+/**************** Custom CSS starts here ****************/
 .nav-bar-container {
   /* border: 1px white solid; */
   width: 100%;
@@ -75,7 +76,7 @@
 }
 
 .spec-index-content {
-  min-width: 50%;
+  min-width: 60%;
   /* border: 1px yellow solid; */
   border-right: 1px solid white;
   box-sizing:border-box;
@@ -94,6 +95,7 @@
   justify-content: left;
 }
 
+.list-title > p,
 .spec-form-element,
 .edge-form-fields,
 .spec-list-item {
@@ -101,7 +103,7 @@
   justify-content: left;
   align-items: center;
   margin: 2px 0px;
-  /* align-items: flex-start; */
+  width: 100%;
 }
 
 button {
@@ -111,8 +113,3 @@ button {
 .edge-form > span {
   margin: 0px 2px;
 }
-
-/* label {
-  align-items: center;
-  justify-content: left;
-} */

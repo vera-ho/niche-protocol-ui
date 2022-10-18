@@ -12,7 +12,7 @@ function App() {
   const [specName, setSpecName] = React.useState('user');
   const [specTypes, setSpecTypes] = React.useState([])
   const [specSchema, setSpecSchema] = React.useState({});
-  const [existingSpec, setExistingSpec] = React.useState();
+  const [existingSpec, setExistingSpec] = React.useState({});
   const [existingDocs, setExistingDocs] = React.useState([]);
 
   // Get spec types for document creation and loading and spec schema for validation/form entries
@@ -22,15 +22,16 @@ function App() {
     getSpecSchema(specName, setSpecSchema);
   }, [specName])
 
-  // Update database
+  // Save to Firestore and return resulting spec (can be used for validating sucessful operation)
   const handleSave = React.useCallback(async (specName, id, values) => {
     if (id === null) {
       id = uuidv4();
-      await createSpec(`${specName}/${id}`, { id, ...values });
-      return;
+      const newSpec = await createSpec(`${specName}/${id}`, { id, ...values });
+      return newSpec;
     }
 
-    await updateSpec(`${specName}/${id}`, values);
+    const updatedSpec = await updateSpec(`${specName}/${id}`, values);
+    return updatedSpec;
   }, []);
 
   // Load one document from a spec with a given UUID`
@@ -57,12 +58,7 @@ function App() {
     setExistingSpec(items[0]);
   }, []);
 
-  const specItems = existingDocs.map((spec, idx) => {
-    return (
-        <SpecItem key={idx} itemNum={idx} spec={spec} specName={specName} setExistingSpec={setExistingSpec} />
-    )
-  }); 
-
+  
   // Set specName from dropdown for entire app
   const handleSpecSelect = React.useCallback((e) => {
     e.preventDefault();
@@ -70,23 +66,44 @@ function App() {
     setExistingSpec({});
     setExistingDocs([]);
   })
-
+  
   // Reset all fields - datetime pickers seem not resettable
   const handleAddNew = React.useCallback(() => {
     let initValues = {};
     Object.keys(specSchema['fields'] || {}).forEach(field => {
       initValues[field] = specSchema['fields'][field]['initialValue'];
     });
-
+    
+    // setExistingSpec({});
     setExistingSpec(initValues);
   })
+  
+  const specItems = existingDocs.map((spec, idx) => {
+    return (
+        <SpecItem key={idx} itemNum={idx} spec={spec} specName={specName} setExistingSpec={setExistingSpec} />
+    )
+  }); 
+
+  const listTitle = specItems.length ? (
+    <div>
+      <h3>all {specName} specs</h3>
+    </div>
+  ) : (
+    <div className='list-title'>
+      <h3>spec entries will display here</h3>
+      <p>1. select spec type from the dropdown above</p>
+      <p>2. load at least one spec entry</p>
+    </div>
+  );
 
   return (
     <div>
+
       <h1>Beagle Data Manager</h1>
 
       <div className='nav-bar-container'>
         <div className='nav-bar-content'>
+
           <div className='spec-type-selection'>
             <label>spec type:
               <select name="spec_name" onChange={handleSpecSelect} value={specName}>
@@ -94,26 +111,23 @@ function App() {
               </select>
             </label>
           </div>
+
           <div className='look-up-form'>
-            {/* <h3>Lookup Spec(s)</h3> */}
             <LookupForm 
               onLoadOne={handleLoadOne} 
               onLoadAll={handleLoadAll}
               specName={specName}
             />
           </div>
+
         </div>
       </div>
 
       <div className='spec-container'>
         <div className='spec-content'>
+
           <div className='spec-index-content'>
-            {specItems.length > 0 && (
-              <div>
-                {/* <hr/> */}
-                <h3>all {specName} specs</h3>
-              </div>
-            )}
+            {listTitle}
             {specItems}
           </div>
 
@@ -131,13 +145,15 @@ function App() {
                   id={existingSpec.id}
                   existingFieldValues={existingSpec}
                   onSave={handleSave}   
-                  specSchema={specSchema}      
+                  specSchema={specSchema}    
+                  setSpec={setExistingSpec}  
                 />
               :
                 <SpecForm
                   specName={specName}
                   specSchema={specSchema}      
                   onSave={handleSave}
+                  setSpec={setExistingSpec}
                 />
               }
             </div>
@@ -165,11 +181,6 @@ function App() {
           </div>
         </div>
       </div>
-      {/* <hr/> */}
-
-
-      {/* <hr/> */}
-
     </div>
   )
 }
